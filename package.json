@@ -1,0 +1,19 @@
+{
+  "name": "animate-scroll-client",
+  "version": "1.0.0",
+  "description": "complex scroll based animations with paralax",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "scrollmagic": "^2.0.5",
+    "gsap": "^1.20.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
