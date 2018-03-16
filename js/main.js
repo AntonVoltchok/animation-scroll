@@ -65,7 +65,7 @@ jQuery(function ($) {
 
   function update() {
     var currentScrollY = latestKnownScrollY;
-    var valueWithMultiplier = currentScrollY / 0.8;
+    var valueWithMultiplier = currentScrollY * 10.5;
     bodymovin.goToAndStop(~~valueWithMultiplier, false);
     ticking = false;
   }
