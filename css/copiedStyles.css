@@ -1304,3 +1304,7 @@ img.close-term {
     margin: 0 auto
   }
 }
+
+html body #wrapper header .logo {
+  margin-top: 20px;
+}
