@@ -61,17 +61,16 @@ jQuery(function ($) {
   anim.addEventListener('DOMLoaded', function(){
 
 
-
-
     window.addEventListener('scroll', onScroll, false);
 
 
     function update() {
+
       var currentScrollY = latestKnownScrollY;
       var valueWithMultiplier = currentScrollY * 23.5;
       lottie.goToAndStop(~~valueWithMultiplier, false);
       ticking = false;
-      console.log(anim, ' logging anim');
+      console.log(anim, ' logging anim', currentScrollY, 'logging current scroll', );
     }
 
 
