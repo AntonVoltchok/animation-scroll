@@ -46,9 +46,9 @@
 jQuery(function ($) {
 
 
-  // bodymovin
+
   var animData = {
-    wrapper: document.getElementById('bodymovin'),
+    wrapper: document.getElementById('lottie'),
     animType: 'svg',
     loop: false,
     prerender: true,
@@ -56,37 +56,44 @@ jQuery(function ($) {
     path: 'anim-data/data.json'
   };
 
-  var anim = bodymovin.loadAnimation(animData);
+  var anim = lottie.loadAnimation(animData);
+
+  anim.addEventListener('DOMLoaded', function(){
 
 
-  // @todo - when implementing, make sure to remove the event listener when on other routes without animation
-  window.addEventListener('scroll', onScroll, false);
+
+    console.log(anim, ' logging anim');
+    window.addEventListener('scroll', onScroll, false);
 
 
-  function update() {
-    var currentScrollY = latestKnownScrollY;
-    var valueWithMultiplier = currentScrollY * 10.5;
-    bodymovin.goToAndStop(~~valueWithMultiplier, false);
-    ticking = false;
-  }
-
-
-  var latestKnownScrollY = 0,
-    ticking = false;
-
-  function onScroll() {
-    latestKnownScrollY = window.scrollY;
-    requestTick();
-  }
-
-  function requestTick() {
-    if (!ticking) {
-      requestAnimationFrame(update);
+    function update() {
+      var currentScrollY = latestKnownScrollY;
+      var valueWithMultiplier = currentScrollY * 10.5;
+      lottie.goToAndStop(~~valueWithMultiplier, false);
+      ticking = false;
     }
-    ticking = true;
-  }
 
-  update();
+
+    var latestKnownScrollY = 0,
+      ticking = false;
+
+    function onScroll() {
+      latestKnownScrollY = window.scrollY;
+      requestTick();
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+      }
+      ticking = true;
+    }
+
+    update();
+
+
+
+  });
 
 
 });
