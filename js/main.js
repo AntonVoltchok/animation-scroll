@@ -45,24 +45,18 @@
 
 jQuery(function ($) {
 
-
-
   var animData = {
     wrapper: document.getElementById('lottie'),
-    animType: 'svg',
+    renderer: 'svg',
     loop: false,
-    prerender: true,
     autoplay: false,
     path: 'anim-data/data.json'
   };
 
   var anim = lottie.loadAnimation(animData);
 
-  anim.addEventListener('DOMLoaded', function(){
-
-
+  anim.addEventListener('DOMLoaded', function () {
     window.addEventListener('scroll', onScroll, false);
-
 
     function update() {
 
@@ -70,15 +64,25 @@ jQuery(function ($) {
       var valueWithMultiplier = currentScrollY * 23.5;
       lottie.goToAndStop(~~valueWithMultiplier, false);
       ticking = false;
-      console.log(anim, ' logging anim', currentScrollY, 'logging current scroll', );
+      console.log({
+
+      });
     }
 
 
     var latestKnownScrollY = 0,
+      scrollTopWindow = 0,
+      scrollHeightWindow = 0,
+      scrollTopContainer = 0,
+      scrollHeightContainer = 0,
       ticking = false;
 
     function onScroll() {
       latestKnownScrollY = window.scrollY;
+      scrollTopWindow = window.scrollTop;
+      scrollHeightWindow = window.scrollHeight;
+      scrollTopContainer = document.querySelector("#wrapper").scrollTop;
+      scrollHeightContainer = document.querySelector("#wrapper").scrollHeight;
       requestTick();
     }
 
@@ -90,7 +94,6 @@ jQuery(function ($) {
     }
 
     update();
-
 
 
   });
