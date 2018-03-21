@@ -45,6 +45,8 @@
 
 jQuery(function ($) {
 
+  var anim;
+
   var animData = {
     wrapper: document.getElementById('lottie'),
     renderer: 'svg',
@@ -53,41 +55,45 @@ jQuery(function ($) {
     path: 'anim-data/data.json'
   };
 
-  var anim = lottie.loadAnimation(animData);
+  anim = lottie.loadAnimation(animData);
 
   anim.addEventListener('DOMLoaded', function () {
-    window.addEventListener('scroll', onScroll, false);
 
+    anim.setSubframe(false);
+    anim.setSpeed(1.29);
+
+    window.addEventListener('scroll', onScroll, false);
     function update() {
 
       var currentScrollY = latestKnownScrollY;
-      var valueWithMultiplier = currentScrollY * 23.5;
-      lottie.goToAndStop(~~valueWithMultiplier, false);
-      ticking = false;
-      console.log({
+      var valueWithMultiplier = currentScrollY * 12.5;
 
+      console.log({
+       scrollHeightContainer,
+        currentScrollY,
+        totalFrames: anim.totalFrames
       });
+
+      // kick off animation linked to scroll
+      lottie.goToAndStop(currentScrollY, true);
+      ticking = false;
     }
 
 
     var latestKnownScrollY = 0,
-      scrollTopWindow = 0,
-      scrollHeightWindow = 0,
-      scrollTopContainer = 0,
       scrollHeightContainer = 0,
       ticking = false;
 
     function onScroll() {
       latestKnownScrollY = window.scrollY;
-      scrollTopWindow = window.scrollTop;
-      scrollHeightWindow = window.scrollHeight;
-      scrollTopContainer = document.querySelector("#wrapper").scrollTop;
       scrollHeightContainer = document.querySelector("#wrapper").scrollHeight;
+
       requestTick();
     }
 
     function requestTick() {
       if (!ticking) {
+
         requestAnimationFrame(update);
       }
       ticking = true;
