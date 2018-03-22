@@ -66,6 +66,22 @@
   height: auto;
 }
 
+#intro-orb-container {
+  z-index: 2;
+}
+
+#main-orb-container {
+  z-index: 3;
+}
+
+#end-orb-container {
+  z-index: 1;
+}
+
+.animation-stack-container {
+  position: relative;
+}
+
 
 @media only screen and (max-width: 2000px) and (min-width: 1700px)  {
   .mid-section {

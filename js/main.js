@@ -1,81 +1,103 @@
-//
-//
-// function attachScroll(anim, contentid, speed) {
-//   var val = 0,
-//     totalDuration = anim.totalFrames/anim.frameRate*1000;
-//
-//   if (contentid.addEventListener) {
-//     contentid.addEventListener("mousewheel", MouseWheelHandler, false);
-//     contentid.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
-//   }else{
-//     contentid.attachEvent("onmousewheel", MouseWheelHandler);
-//   }
-//
-//   function MouseWheelHandler(e) {
-//     var e = window.event || e;
-//     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-//     if (delta < 0) {
-//       if (val < totalDuration) {
-//         val += (Math.abs(delta))*speed;
-//       }
-//     }else {
-//       if (val > 0) {
-//         val -= (Math.abs(delta))*speed;
-//       }
-//     }
-//
-//     console.log("logging value", val)
-//
-//     bodymovin.goToAndStop(val,true);
-//   }
-//
-//
-// }
-
-// // initialize ScrollMagic
-// var controller = new ScrollMagic.Controller();
-//
-// // new scene
-// var topScene = new ScrollMagic.Scene()
-//
-// function scrollPos() {
-//   return controller.info("scrollPos");
-// }
+//var valueWithMultiplier = currentScrollY * (anim.totalFrames / scrollHeightContainer);
+//anim.addEventListener('data_ready', function(){anim.frameRate = 160});
 
 
 jQuery(function ($) {
 
-  var anim;
+  var mainAnim, introAnim, endAnim;
 
-  var animData = {
-    wrapper: document.getElementById('lottie'),
-    renderer: 'svg',
-    loop: false,
-    autoplay: false,
-    path: 'anim-data/data.json'
-  };
+  var introLoopAnimation = {
+      wrapper: document.getElementById('intro-orb-container'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'anim-data/orb-loop-intro.json'
+    },
 
-  anim = lottie.loadAnimation(animData);
+    mainAnimation = {
+      wrapper: document.getElementById('main-orb-container'),
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: 'anim-data/main-animation.json'
+    },
 
-  anim.addEventListener('DOMLoaded', function () {
+    endLoopAnimation = {
+      wrapper: document.getElementById('end-orb-container'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'anim-data/end-loop-spin.json'
+    };
 
-    anim.setSubframe(false);
-    anim.setSpeed(1.29);
 
-    window.addEventListener('scroll', onScroll, false);
+  introAnim = lottie.loadAnimation(introLoopAnimation);
+  mainAnim = lottie.loadAnimation(mainAnimation);
+  endAnim = lottie.loadAnimation(endLoopAnimation);
+
+
+  introAnim.addEventListener('DOMLoaded', function () {
+    introAnim.play();
+    introAnim.loop = true;
+  });
+
+  endAnim.addEventListener('DOMLoaded', function () {
+    introAnim.play();
+    endAnim.loop = true;
+  });
+
+  mainAnim.addEventListener('DOMLoaded', function () {
+
+    window.addEventListener('scroll', onScroll, true);
+    mainAnim.setSubframe(true);
+    mainAnim.setSpeed(20);
+
     function update() {
 
       var currentScrollY = latestKnownScrollY;
-      var valueWithMultiplier = currentScrollY * 12.5;
+      var introContainer = document.getElementById('intro-orb-container');
+      var mainContainer = document.getElementById('main-orb-container');
+      var endContainer = document.getElementById('end-orb-container');
+      var scrollContainer = document.querySelector("#wrapper");
+
 
       console.log({
-       scrollHeightContainer,
-        currentScrollY,
-        totalFrames: anim.totalFrames
+        introAnim, mainAnim, endAnim
       });
 
-      // kick off animation linked to scroll
-      lottie.goToAndStop(currentScrollY, true);
+      var mainCurrentFrame = mainAnim.currentFrame,
+        mainTotalFrames = mainAnim.totalFrames;
+
+
+      console.log({mainCurrentFrame});
+      console.log({mainTotalFrames});
+
+
+
+      if (mainAnim.currentFrame < 1800 ) {
+        introContainer.style.display = "none";
+        mainContainer.style.display = "block";
+        endContainer.style.display = "none";
+        lottie.goToAndStop(currentScrollY, false);
+      }
+
+      if (currentScrollY === 0) {
+        introContainer.style.display = "block";
+        mainContainer.style.display = "none";
+        endContainer.style.display = "none";
+        introAnim.play();
+        introAnim.loop = true;
+      }
+
+      if (mainAnim.currentFrame > 1800 ) {
+        console.log('catching main anim current frame over 1800');
+        mainContainer.style.display = "none";
+        introContainer.style.display = "none";
+        endContainer.style.display = "block";
+        endAnim.play();
+        endAnim.loop = true;
+      }
+
       ticking = false;
     }
 
@@ -87,7 +109,6 @@ jQuery(function ($) {
     function onScroll() {
       latestKnownScrollY = window.scrollY;
       scrollHeightContainer = document.querySelector("#wrapper").scrollHeight;
-
       requestTick();
     }
 
@@ -103,6 +124,53 @@ jQuery(function ($) {
 
 
   });
+
+  /*
+
+    endAnim.addEventListener('DOMLoaded', function () {
+
+      window.addEventListener('scroll', onScroll, true);
+
+      function update() {
+
+        var endContainer = document.getElementById('end-orb-container');
+        var scrollContainer = document.querySelector("#wrapper");
+
+        endAnim.loop = true;
+        if (scrollContainer.offsetHeight + scrollContainer.scrollTop === scrollContainer.scrollHeight) {
+          endContainer.style.display = "block";
+        } else {
+          endContainer.style.display = "none";
+        }
+
+        ticking = false;
+      }
+
+
+      var latestKnownScrollY = 0,
+        scrollHeightContainer = 0,
+        ticking = false;
+
+      function onScroll() {
+        latestKnownScrollY = window.scrollY;
+        scrollHeightContainer = document.querySelector("#wrapper").scrollHeight;
+        requestTick();
+      }
+
+      function requestTick() {
+        if (!ticking) {
+
+          requestAnimationFrame(update);
+        }
+        ticking = true;
+      }
+
+      update();
+
+
+    });
+
+  */
 
 
 });
