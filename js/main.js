@@ -4,6 +4,17 @@
 
 jQuery(function ($) {
 
+  var pass_entered;
+  var password="ExoknoxbyComplex42";
+
+  while (pass_entered!=password) {
+    pass_entered=prompt("Please enter the password:",'')
+  }
+
+  self.close();
+  document.body.style.display = "block";
+
+
   var mainAnim, introAnim, endAnim;
 
   var introLoopAnimation = {

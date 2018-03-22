@@ -100,3 +100,7 @@
     height: 120vh;
   }
 }
+
+body {
+  display: none;
+}
